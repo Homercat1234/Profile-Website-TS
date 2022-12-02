@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer"
 import Home from "./Pages/Home";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
@@ -18,7 +17,6 @@ export default function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/*" element={<Home />} />
         </Routes>
-        <Footer />
       </Router>
     </>
   );

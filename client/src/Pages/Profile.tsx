@@ -26,7 +26,7 @@ export default function Profile() {
     const cookies = new Cookies();
     if (cookies.get("session") != null) {
     await axios
-      .patch("http://127.0.0.1/api/profile", {
+      .patch("api/profile", {
         token: cookies.get("session").token,
         auth: {
           ...(password != null && password !== "" && { password }),
@@ -49,7 +49,7 @@ export default function Profile() {
   };
 
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <>
       <SingleProfile name={`${name}`} url={`${url}`} bio={`${bio}`} />
       <Container className="border mt-2 mb-2">
         <Row>
@@ -111,6 +111,6 @@ export default function Profile() {
           </div>
         </Row>
       </Container>
-    </div>
+    </>
   );
 }

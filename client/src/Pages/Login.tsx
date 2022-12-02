@@ -12,7 +12,7 @@ export default function Login() {
 
   useEffect(() => {
     (async () => {
-      if ((await verify()) === false) nagivate("/");
+      if ((await verify()) === true) nagivate("/");
     })();
   }, []);
 
@@ -20,7 +20,7 @@ export default function Login() {
     event.preventDefault();
 
     await axios
-      .post("http://127.0.0.1/api/auth/login", {
+      .post("api/auth/login", {
         email,
         password,
       })
@@ -42,11 +42,11 @@ export default function Login() {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <>
       <Container className="mt-1 mb-2">
         <Row className="m-0">
-          <Col xs={6} md={4} />
-          <Col xs={6} md={4} className="border mb-2 mt-1">
+          <Col lg={3} />
+          <Col lg={6} className="border mb-2 mt-1">
             <Form>
               <Form.Floating className="mt-2 mb-2">
                 <Form.Control
@@ -79,6 +79,6 @@ export default function Login() {
           </Col>
         </Row>
       </Container>
-    </div>
+    </>
   );
 }

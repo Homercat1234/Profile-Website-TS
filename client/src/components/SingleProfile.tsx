@@ -23,7 +23,7 @@ export default function SingleProfile({
       if (cookies.get("session") != null) {
         setProfile(
           await axios
-            .post("http://127.0.0.1/api/profile/email", {
+            .post("api/profile/email", {
               email: cookies.get("session").email,
             })
             .then((res) => {

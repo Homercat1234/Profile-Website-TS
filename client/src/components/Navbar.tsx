@@ -9,7 +9,7 @@ import verify from "../functions/verify";
 const logout = async () => {
   const cookies = new Cookies();
   if (cookies.get("session") != null) {
-    await axios.post("http://127.0.0.1/api/auth/logout", {
+    await axios.post("api/auth/logout", {
       token: cookies.get("session").token,
       email: cookies.get("session").email,
     });
@@ -60,8 +60,8 @@ export default function Navbar() {
             <Nav className="ms-auto">
               {user === false ? (
                 <Nav.Item>
-                  <Nav.Link as={Link} to="/register">
-                    Register
+                  <Nav.Link as={Link} to="/login">
+                    Login
                   </Nav.Link>
                 </Nav.Item>
               ) : (

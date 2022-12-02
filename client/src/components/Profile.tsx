@@ -11,7 +11,7 @@ async function getProfiles(): Promise<any[]> {
     };
   }
 
-  let profiles: any = await axios.get("http://127.0.0.1/api/profile").then((data) => {
+  let profiles: any = await axios.get("api/profile").then((data) => {
     return data.data;
   });
 

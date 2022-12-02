@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import { Profile } from "../models/account";
 import { genSalt, hash } from "bcrypt";
-import jwt from "jsonwebtoken";
+import { verify } from "../functions/verify";
+
 
 const profileRouter = express.Router();
 
@@ -29,6 +30,14 @@ profileRouter.post("/", (req, res) => {
 
 profileRouter.patch("/", async (req, res) => {
   try {
+    let email = req.body.email as String;
+    const token = req.body.token as String;
+
+    const result = await verify(email, token);
+
+    if(result === false)
+      return res.status(400).send("Invalid session");
+
     let password;
     if (req.body.auth.password != null && req.body.auth.password != "") {
       // If password change, rehash
@@ -37,36 +46,7 @@ profileRouter.patch("/", async (req, res) => {
       password = await hash(passwordHash, salt);
     }
 
-    const token = req.body.token; // Verify User
-    const session = await Profile.findOne()
-      .where({ email: req.body.email })
-      .select("session");
-    const hashValue = await Profile.findOne()
-      .where({ email: req.body.email })
-      .select("hash");
-    if (session!.session != token)
-      return res
-        .status(400)
-        .json({ message: "Session was not found", result: false });
-
-    if (hashValue!.hash == null)
-      return res
-        .status(400)
-        .json({ message: "Hash was not found", result: false });
-    if (session!.session != token)
-      return res
-        .status(400)
-        .json({ message: "Session was not found", result: false });
-
-    jwt.verify(token, hashValue!.hash as any);
-    const decoded = jwt.decode(token, { json: true });
-
-    if ((decoded!.date as Date) < new Date(Date.now()))
-      return res
-        .status(400)
-        .json({ message: "Session expired", result: false });
-
-    const { email } = req.body.auth; // Update
+    email = req.body.auth.email; // Update
     const { url, bio, name } = req.body.profile;
 
     const profile = await Profile.findOneAndUpdate(

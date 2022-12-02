@@ -5,6 +5,7 @@ interface IProfile {
   name: string;
   bio: string;
   url: string;
+  admin: Boolean
 }
 
 interface IAccount {
@@ -25,6 +26,7 @@ const accountSchema = new Schema<IAccount, accountType>({
       name: { type: String, required: false },
       bio: { type: String, required: false },
       url: { type: String, required: false },
+      admin: { type: Boolean, required: false},
     }),
     required: false,
   },

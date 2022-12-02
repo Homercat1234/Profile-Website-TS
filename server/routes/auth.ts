@@ -3,6 +3,7 @@ import cors from "cors";
 import { genSalt, hash, compare } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Profile } from "../models/account";
+import { verify } from "../functions/verify";
 
 const authRouter = express.Router();
 
@@ -136,28 +137,11 @@ authRouter.post("/verify", async (req, res) => {
         .json({ message: "A required parameter was not found", result: false });
 
     const email = req.body.email as String;
-    const token = req.body.token;
-    const hash = await Profile.findOne().where({ email }).select("hash");
-    const session = await Profile.findOne().where({ email }).select("session");
+    const token = req.body.token as String;
 
-    if (hash!.hash == null)
-      return res
-        .status(400)
-        .json({ message: "Hash was not found", result: false });
-    if (session!.session != token)
-      return res
-        .status(400)
-        .json({ message: "Session was not found", result: false });
-
-    jwt.verify(token, hash!.hash as any);
-    const decoded = jwt.decode(token, { json: true });
-    
-    if ((decoded!.date as Date) < new Date(Date.now()))
-      return res
-        .status(400)
-        .json({ message: "Session expired", result: false });
-
-    return res.status(200).json({ result: true });
+    const result = await verify(email, token);
+    if (result) return res.status(200).json({ result: true });
+    return res.status(400).json({ message: "Invalid session", result: false });
   } catch (error) {
     return res.status(400).json({ message: error, result: false });
   }

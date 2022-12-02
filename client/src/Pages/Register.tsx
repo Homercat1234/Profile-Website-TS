@@ -23,7 +23,7 @@ export default function Register() {
     event.preventDefault();
 
     await axios
-      .post("http://127.0.0.1/api/auth/create", {
+      .post("api/auth/create", {
         email,
         password,
         name,
@@ -48,7 +48,7 @@ export default function Register() {
   };
 
   return (
-    <div style={{ height: "100vh" }}>
+    <>
       <Container className="border mt-2 mb-2">
         <Row>
           <Col lg={4} className="mb-2 mt-2">
@@ -114,6 +114,6 @@ export default function Register() {
           </div>
         </Row>
       </Container>
-    </div>
+    </>
   );
 }
