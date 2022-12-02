@@ -1,0 +1,49 @@
+services:
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+    restart: unless-stopped
+    ports:
+      - 80:80
+    build:  
+      context: ./
+      dockerfile: "dockerfile"
+    
+
+  mongoDB:
+    container_name: mongoDB
+    image: mongo:latest
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    volumes: 
+    - db:/data/db
+  
+  server:
+    container_name: server
+    environment:
+      - DATABASE=mongodb://mongoDB:27017/profile
+      - PORT=3001
+    build:  
+      context: ./server
+      dockerfile: "dockerfile"
+    restart: unless-stopped
+    ports: 
+      - 3001:3001
+    depends_on:
+      - mongoDB
+    stdin_open: true
+    tty: true
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+  db:
